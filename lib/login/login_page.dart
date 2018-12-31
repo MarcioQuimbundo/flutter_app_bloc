@@ -6,14 +6,12 @@ import 'package:flutter_app_bloc/user_repository/user_repository.dart';
 import 'package:flutter_app_bloc/authentication/authentication.dart';
 import 'login.dart';
 
-
 class LoginPage extends StatefulWidget {
   final UserRepository userRepository;
 
   LoginPage({Key key, @required this.userRepository})
       : assert(userRepository != null),
         super(key: key);
-
 
   @override
   State<StatefulWidget> createState() => LoginPageState();
@@ -40,6 +38,4 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 }

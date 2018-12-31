@@ -5,9 +5,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_app_bloc/user_repository/user_repository.dart';
 import 'package:flutter_app_bloc/authentication/authentication.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
-
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository userRepository;
+
   AuthenticationBloc({@required this.userRepository})
       : assert(userRepository != null);
 
@@ -15,9 +16,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   AuthenticationState get initialState => AuthenticationState.initializing();
 
   @override
-  Stream<AuthenticationState> mapEventToState(AuthenticationState currentState, AuthenticationEvent event) async* {
-    if (event is AppStart) {
-    }
+  Stream<AuthenticationState> mapEventToState(AuthenticationState currentState,
+      AuthenticationEvent event) async* {
+    if (event is AppStart) {}
 
     if (event is Login) {
       yield currentState.copyWith(isLoading: true);
@@ -31,5 +32,4 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield AuthenticationState.unauthenticated();
     }
   }
-
 }

@@ -20,17 +20,12 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginEvent, LoginState>(
       bloc: widget.loginBloc,
-      builder: (
-          BuildContext context,
-          LoginState loginState,
-          ) {
+      builder: (BuildContext context,
+          LoginState loginState,) {
         if (_loginSucceeded(loginState)) {
           widget.authBloc.dispatch(Login(token: loginState.token));
           widget.loginBloc.dispatch(LoggedIn());
@@ -46,7 +41,6 @@ class LoginFormState extends State<LoginForm> {
             );
           });
         }
-
         return _form(loginState);
       },
     );
@@ -54,31 +48,60 @@ class LoginFormState extends State<LoginForm> {
 
   Widget _form(LoginState loginState) {
     return Form(
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(labelText: 'username'),
-            controller: _usernameController,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'password'),
-            controller: _passwordController,
-            obscureText: true,
-          ),
-          RaisedButton(
-            onPressed:
-            loginState.isLoginButtonEnabled ? _onLoginButtonPressed : null,
-            child: Text('Login'),
-          ),
-          Container(
-            child: loginState.isLoading ? CircularProgressIndicator() : null,
-          ),
-        ],
+      child: Container(
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            StreamBuilder<String>(
+              stream: widget.loginBloc.email,
+              builder: (context, snapshot) =>
+                  TextField(
+                    onChanged: widget.loginBloc.emailChanged,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Enter email",
+                        labelText: "Email",
+                        errorText: snapshot.error),
+                  ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            StreamBuilder<String>(
+              stream: widget.loginBloc.password,
+              builder: (context, snapshot) =>
+                  TextField(
+                    onChanged: widget.loginBloc.passwordChanged,
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Enter password",
+                        labelText: "Password",
+                        errorText: snapshot.error),
+                  ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            RaisedButton(
+              onPressed: loginState.isLoginButtonEnabled
+                  ? _onLoginButtonPressed
+                  : null,
+              child: Text('Login'),
+            ),
+            Container(
+              child: loginState.isLoading ? CircularProgressIndicator() : null,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   bool _loginSucceeded(LoginState state) => state.token.isNotEmpty;
+
   bool _loginFailed(LoginState state) => state.error.isNotEmpty;
 
   void _onWidgetDidBuild(Function callback) {
@@ -88,9 +111,6 @@ class LoginFormState extends State<LoginForm> {
   }
 
   _onLoginButtonPressed() {
-    widget.loginBloc.dispatch(LoginButtonPressed(
-      username: _usernameController.text,
-      password: _passwordController.text,
-    ));
+    widget.loginBloc.dispatch(LoginButtonPressed());
   }
 }

@@ -1,12 +1,25 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+import 'validators.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_app_bloc/user_repository/user_repository.dart';
 import 'login.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
   final UserRepository userRepository;
+  final _emailController = BehaviorSubject<String>();
+  final _passwordController = BehaviorSubject<String>();
+
+  Function(String) get emailChanged => _emailController.sink.add;
+
+  Function(String) get passwordChanged => _passwordController.sink.add;
+
+  Stream<String> get email => _emailController.stream.transform(emailValidator);
+
+  Stream<String> get password =>
+      _passwordController.stream.transform(passwordValidator);
 
   LoginBloc({@required this.userRepository}) : assert(userRepository != null);
 
@@ -21,7 +34,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       try {
         final token = await userRepository.authenticate(
-            username: event.username, password: event.password);
+            username: _emailController.value,
+            password: _passwordController.value);
         yield LoginState.success(token);
       } catch (error) {
         yield LoginState.failure(error.toString());
@@ -31,5 +45,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoggedIn) {
       yield LoginState.initial();
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController?.close();
+    _passwordController?.close();
   }
 }

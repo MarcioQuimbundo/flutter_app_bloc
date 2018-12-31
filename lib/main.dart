@@ -52,9 +52,9 @@ class AppState extends State<App> {
 //                if (state.isAuthenticated) {
 //                widgets.add(HomePage());
 //                } else {
-                  widgets.add(LoginPage(
-                    userRepository: _userRepository,
-                  ));
+                widgets.add(LoginPage(
+                  userRepository: _userRepository,
+                ));
 //                }
                 return Stack(
                   children: widgets,
