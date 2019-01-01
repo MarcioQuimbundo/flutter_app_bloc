@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../login_state.dart';
 
 class ProgressButton extends StatefulWidget {
-//  final Function callback;
-  double size;
+  final VoidCallback callback;
+  final LoginState loginState;
+  final double size;
 
-  ProgressButton(this.size);
-
-//  ProgressButton(this.callback);
+  ProgressButton(this.size, this.loginState, this.callback);
 
   @override
   State<StatefulWidget> createState() => _ProgressButtonState();
@@ -16,7 +16,6 @@ class ProgressButton extends StatefulWidget {
 class _ProgressButtonState extends State<ProgressButton>
     with TickerProviderStateMixin {
   bool _isPressed = false, _animatingReveal = false;
-  int _state = 0;
   double _width = double.infinity;
   Animation _animation;
   GlobalKey _globalKey = GlobalKey();
@@ -37,9 +36,10 @@ class _ProgressButtonState extends State<ProgressButton>
   @override
   Widget build(BuildContext context) {
     return PhysicalModel(
-        color: _state == 2 ? Colors.green : Colors.blue,
+        color: widget.loginState.token.isNotEmpty ? Colors.green : Colors.blue,
         elevation: calculateElevation(),
         borderRadius: BorderRadius.circular(widget.size / 2.0),
+        shadowColor: Colors.transparent,
         child: Container(
           key: _globalKey,
           height: widget.size,
@@ -55,11 +55,11 @@ class _ProgressButtonState extends State<ProgressButton>
             padding: EdgeInsets.all(0.0),
             color: Colors.transparent,
             child: buildButtonChild(),
-            onPressed: () {},
+            onPressed: widget.callback,
             onHighlightChanged: (isPressed) {
               setState(() {
                 _isPressed = isPressed;
-                if (_state == 0) {
+                if (widget.loginState.isLoginButtonEnabled) {
                   animateButton();
                 }
               });
@@ -69,10 +69,10 @@ class _ProgressButtonState extends State<ProgressButton>
   }
 
   Widget buildButtonChild() {
-    if (_state == 0) {
+    if (widget.loginState.loginInitial()) {
       return Text('Login',
           style: TextStyle(color: Colors.white, fontSize: 16.0));
-    } else if (_state == 1) {
+    } else if (widget.loginState.isLoading) {
       return SizedBox(
         height: 0.75 * widget.size,
         width: 0.75 * widget.size,
@@ -81,8 +81,11 @@ class _ProgressButtonState extends State<ProgressButton>
           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         ),
       );
-    } else {
+    } else if (widget.loginState.loginSucceeded()) {
+      _animatingReveal = true;
       return Icon(Icons.check, color: Colors.white);
+    } else {
+      return Icon(Icons.clear, color: Colors.red);
     }
   }
 
@@ -99,21 +102,6 @@ class _ProgressButtonState extends State<ProgressButton>
         });
       });
     _controller.forward();
-
-    setState(() {
-      _state = 1;
-    });
-
-    Timer(Duration(milliseconds: 3300), () {
-      setState(() {
-        _state = 2;
-      });
-    });
-
-    Timer(Duration(milliseconds: 3600), () {
-      _animatingReveal = true;
-//      widget.callback();
-    });
   }
 
   double calculateElevation() {
@@ -127,6 +115,6 @@ class _ProgressButtonState extends State<ProgressButton>
   void reset() {
     _width = double.infinity;
     _animatingReveal = false;
-    _state = 0;
+//    _state = 0;
   }
 }

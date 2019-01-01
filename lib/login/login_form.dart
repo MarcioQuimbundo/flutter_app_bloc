@@ -57,12 +57,12 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
       bloc: widget.loginBloc,
       builder: (BuildContext context,
           LoginState loginState,) {
-        if (_loginSucceeded(loginState)) {
+        if (loginState.loginSucceeded()) {
           widget.authBloc.dispatch(Login(token: loginState.token));
           widget.loginBloc.dispatch(LoggedIn());
         }
 
-        if (_loginFailed(loginState)) {
+        if (loginState.loginFailed()) {
           _onWidgetDidBuild(() {
             Scaffold.of(context).showSnackBar(
               SnackBar(
@@ -116,16 +116,16 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
             SizedBox(
               height: 20.0,
             ),
-            ProgressButton(50.0),
+            ProgressButton(50.0, loginState, _onLoginButtonPressed),
           ],
         ),
       ),
     );
   }
 
-  bool _loginSucceeded(LoginState state) => state.token.isNotEmpty;
-
-  bool _loginFailed(LoginState state) => state.error.isNotEmpty;
+//  bool _loginSucceeded(LoginState state) => state.token.isNotEmpty;
+//
+//  bool _loginFailed(LoginState state) => state.error.isNotEmpty;
 
   void _onWidgetDidBuild(Function callback) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -133,7 +133,7 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
     });
   }
 
-  _onLoginButtonPressed() {
+  void _onLoginButtonPressed() {
     widget.loginBloc.dispatch(LoginButtonPressed());
   }
 }

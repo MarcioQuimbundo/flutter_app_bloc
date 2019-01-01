@@ -43,7 +43,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
     }
 
     if (event is LoggedIn) {
-      yield LoginState.initial();
+//      yield LoginState.initial();
     }
   }
 

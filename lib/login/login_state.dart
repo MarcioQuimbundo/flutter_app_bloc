@@ -33,6 +33,14 @@ class LoginState {
         isLoading: false, isLoginButtonEnabled: true, error: '', token: token);
   }
 
+  bool loginSucceeded() => this.token.isNotEmpty;
+
+  bool loginFailed() => this.error.isNotEmpty;
+
+  bool loginInitial() =>
+      !this.isLoading && this.isLoginButtonEnabled && this.token.isEmpty &&
+          this.error.isEmpty;
+
   @override
   bool operator ==(
     Object other,
