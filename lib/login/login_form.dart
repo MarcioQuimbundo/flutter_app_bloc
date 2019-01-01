@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'login_animation.dart';
+import 'components/progress_button.dart';
 import 'package:flutter_app_bloc/authentication/authentication.dart';
 import 'login.dart';
 
@@ -19,7 +21,36 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => LoginFormState();
 }
 
-class LoginFormState extends State<LoginForm> {
+class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
+
+  AnimationController _loginButtonController;
+  Animation<double> _buttonAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginButtonController = new AnimationController(
+        vsync: this, duration: new Duration(milliseconds: 3000));
+    _buttonAnimation =
+    new CurvedAnimation(parent: _loginButtonController, curve: Curves.easeIn);
+
+    _buttonAnimation.addListener(() => this.setState(() {}));
+    _loginButtonController.forward();
+  }
+
+  @override
+  void dispose() {
+    _loginButtonController.dispose();
+    super.dispose();
+  }
+
+//  Future<Null> _playAnimation() async {
+//    try {
+//      await _loginButtonController.forward();
+//      await _loginButtonController.reverse();
+//    } on TickerCanceled {}
+//  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginEvent, LoginState>(
@@ -85,15 +116,7 @@ class LoginFormState extends State<LoginForm> {
             SizedBox(
               height: 20.0,
             ),
-            RaisedButton(
-              onPressed: loginState.isLoginButtonEnabled
-                  ? _onLoginButtonPressed
-                  : null,
-              child: Text('Login'),
-            ),
-            Container(
-              child: loginState.isLoading ? CircularProgressIndicator() : null,
-            ),
+            ProgressButton(50.0),
           ],
         ),
       ),
