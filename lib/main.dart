@@ -6,6 +6,7 @@ import 'authentication/authentication.dart';
 import 'login/login.dart';
 import 'routes.dart';
 import 'home/home_page.dart';
+import 'list/list.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -27,6 +28,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   AuthenticationBloc _authenticationBloc;
   final UserRepository _userRepository = UserRepository();
+  final ListRepository _listRepository = ListRepository();
 
   @override
   void initState() {
@@ -44,25 +46,31 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationBloc>(
-      bloc: _authenticationBloc,
-      child: MaterialApp(
-//        routes: Routes.routes,
-          home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
-              bloc: _authenticationBloc,
-              builder: (BuildContext context, AuthenticationState state) {
-                List<Widget> widgets = [];
-
-                if (state.isAuthenticated) {
-                  widgets.add(HomePage());
-                } else {
-                widgets.add(LoginPage(
-                  userRepository: _userRepository,
-                ));
-                }
-                return Stack(
-                  children: widgets,
-                );
-              })),
-    );
+        bloc: _authenticationBloc,
+        child: MaterialApp(routes: <String, WidgetBuilder>{
+          "/": (BuildContext context) {
+            return BlocBuilder<AuthenticationEvent, AuthenticationState>(
+                bloc: _authenticationBloc,
+                builder: (BuildContext context, AuthenticationState state) {
+                  List<Widget> widgets = [];
+                  if (state.isAuthenticated) {
+                    widgets.add(HomePage());
+                  } else {
+                    widgets.add(LoginPage(
+                      userRepository: _userRepository,
+                    ));
+                  }
+                  return Stack(
+                    children: widgets,
+                  );
+                });
+          },
+          "/main": (BuildContext context) => new HomePage(),
+          "/list": (BuildContext context) =>
+          new ListPage(
+              title: "Equipments",
+              userRepository: _userRepository,
+              listRepository: _listRepository),
+        }));
   }
 }

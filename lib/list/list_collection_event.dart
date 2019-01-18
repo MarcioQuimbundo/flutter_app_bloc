@@ -1,0 +1,1 @@
+enum ListCollectionEvent { refresh }

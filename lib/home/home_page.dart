@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'diagonal_clipper.dart';
+import 'package:flutter/scheduler.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -35,16 +36,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildGrid() {
-    return new GridView.count(
-      crossAxisCount: 2,
+    final widg = <Widget>[
+      makeDashboardItem("Equipments", Icons.devices_other),
+      makeDashboardItem("Appointments", Icons.calendar_today),
+      makeDashboardItem("New Case", Icons.assignment),
+      makeDashboardItem("Settings", Icons.settings),
+    ];
+    return new GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3, mainAxisSpacing: 25.0),
       padding: EdgeInsets.only(
           left: 3.0, top: _imageHeight, right: 3.0, bottom: 3.0),
-      children: <Widget>[
-        makeDashboardItem("Equipments", Icons.devices_other),
-        makeDashboardItem("Appointments", Icons.calendar_today),
-        makeDashboardItem("New Case", Icons.assignment),
-        makeDashboardItem("Settings", Icons.settings),
-      ],
+      itemBuilder: (BuildContext context, int index) {
+        return widg[index];
+      },
+      itemCount: widg.length,
     );
   }
 
@@ -59,13 +65,16 @@ class _HomePageState extends State<HomePage> {
         child: new InkWell(
             onTap: () {
               print(title);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pushNamed('/list');
+              });
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               verticalDirection: VerticalDirection.down,
               children: <Widget>[
-                SizedBox(height: 50.0),
+                SizedBox(height: 20.0),
                 Center(
                     child: Icon(
                   icon,
