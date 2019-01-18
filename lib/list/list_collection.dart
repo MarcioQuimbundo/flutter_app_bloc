@@ -60,10 +60,10 @@ class ListCollectionState extends State<ListCollection> {
 
   Widget makeCard(Result item) {
     return Card(
-      elevation: 8.0,
+      elevation: 1.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+//        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .4)),
         child: makeListTile(item),
       ),
     );
@@ -76,12 +76,12 @@ class ListCollectionState extends State<ListCollection> {
           padding: EdgeInsets.only(right: 12.0),
           decoration: new BoxDecoration(
               border: new Border(
-                  right: new BorderSide(width: 1.0, color: Colors.white24))),
-          child: Icon(Icons.autorenew, color: Colors.white),
+                  right: new BorderSide(width: 1.0, color: Colors.grey))),
+          child: Icon(Icons.autorenew, color: Colors.black12),
         ),
         title: Text(
           item.title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -93,7 +93,7 @@ class ListCollectionState extends State<ListCollection> {
                   // tag: 'hero',
                   child: Text(
                     "${item.vote_average}",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                   ),
                 )),
             Expanded(
@@ -102,16 +102,16 @@ class ListCollectionState extends State<ListCollection> {
                 decoration: new BoxDecoration(
                     border: new Border(
                         left:
-                            new BorderSide(width: 1.0, color: Colors.white24))),
+                        new BorderSide(width: 1.0, color: Colors.black12))),
                 child: Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(item.release_date,
-                        style: TextStyle(color: Colors.white))),
+                        style: TextStyle(color: Colors.black))),
               ),
             )
           ],
         ),
         trailing:
-            Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0));
+        Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0));
   }
 }
