@@ -7,7 +7,7 @@ import 'dart:convert';
 class MovieListApiProvider extends ListApiProvider {
   MovieListApiProvider(String baseEndpoint) : super(baseEndpoint);
 
-  Future<ItemModel> fetchList() async {
+  Future<ItemModel> retrieveList() async {
     print("entered");
     final response =
         await client.get("$baseEndpoint/3/movie/popular?api_key=$apiKey");

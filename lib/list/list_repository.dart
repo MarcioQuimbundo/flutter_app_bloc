@@ -9,8 +9,8 @@ class ListRepository {
   final activitylistApiProvider = ActivityListApiProvider(
       "https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io");
 
-  Future<ItemModel> fetchList() => movielistApiProvider.fetchList();
+  Future<ItemModel> fetchList() => movielistApiProvider.retrieveList();
 
   Future<List<Activity>> retrieveActivities() =>
-      activitylistApiProvider.retrieveActivities();
+      activitylistApiProvider.retrieveList();
 }

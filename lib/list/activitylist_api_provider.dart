@@ -7,7 +7,7 @@ import 'dart:convert';
 class ActivityListApiProvider extends ListApiProvider {
   ActivityListApiProvider(String baseEndpoint) : super(baseEndpoint);
 
-  Future<List<Activity>> retrieveActivities() async {
+  Future<List<Activity>> retrieveList() async {
     final response =
         await client.get("$baseEndpoint/xrmdev/api/activities/get");
     if (response.statusCode == 200) {
