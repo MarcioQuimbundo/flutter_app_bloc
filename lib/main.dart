@@ -7,6 +7,7 @@ import 'login/login.dart';
 import 'routes.dart';
 import 'home/home_page.dart';
 import 'list/list.dart';
+import 'qr_scanner/qr_scanner.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -71,6 +72,7 @@ class AppState extends State<App> {
               title: "Equipments",
               userRepository: _userRepository,
               listRepository: _listRepository),
+          "/scan": (BuildContext context) => new ScanScreen(),
         }));
   }
 }

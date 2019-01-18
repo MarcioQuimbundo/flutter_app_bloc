@@ -37,10 +37,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildGrid() {
     final widg = <Widget>[
-      makeDashboardItem("Equipments", Icons.devices_other),
-      makeDashboardItem("Appointments", Icons.calendar_today),
-      makeDashboardItem("New Case", Icons.assignment),
-      makeDashboardItem("Settings", Icons.settings),
+      makeDashboardItem("Equipments", Icons.devices_other, '/list'),
+      makeDashboardItem("Scan QR", Icons.camera_front, '/scan'),
+      makeDashboardItem("Appointments", Icons.calendar_today, '/'),
+      makeDashboardItem("New Case", Icons.assignment, '/'),
+      makeDashboardItem("Settings", Icons.settings, '/'),
     ];
     return new GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Card makeDashboardItem(String title, IconData icon) {
+  Card makeDashboardItem(String title, IconData icon, String path) {
     return Card(
       elevation: 1.0,
       margin: new EdgeInsets.all(8.0),
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               print(title);
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pushNamed('/list');
+                Navigator.of(context).pushNamed(path);
               });
             },
             child: Column(
