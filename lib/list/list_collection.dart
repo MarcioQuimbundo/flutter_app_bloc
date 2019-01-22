@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'list.dart';
+import 'activity.dart';
+import 'equipment.dart';
 
 class ListCollection extends StatefulWidget {
   final ListBloc listBloc;
+  final SupportedListItems listType;
 
-  ListCollection({
-    Key key,
-    @required this.listBloc,
-  }) : super(key: key);
+  ListCollection({Key key, @required this.listBloc, @required this.listType})
+      : super(key: key);
 
   @override
   ListCollectionState createState() => new ListCollectionState();
@@ -28,16 +29,64 @@ class ListCollectionState extends State<ListCollection> {
       bloc: widget.listBloc,
       builder: (BuildContext context, ListState state) {
         if (state.loadingSucceeded()) {
-          ItemModel listItem = state.listItem;
-          return new Container(
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: listItem.results.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return makeCard(listItem.results[index]);
-                }),
-          );
+          switch (widget.listType) {
+            case SupportedListItems.movie:
+              {
+                ItemModel item = state.listItem;
+                return new Container(
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: item.results.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Result result = item.results[index];
+                        var widgetVM = _ListWidgetModel(title: result.title,
+                            subtitle: result.original_title,
+                            rowTitle: result.vote_average.toString(),
+                            rowSubtitle: result.release_date);
+                        return makeCard(widgetVM);
+                      }),
+                );
+              }
+            case SupportedListItems.activities:
+              {
+                List<Activity> activities = state.listItem;
+                return new Container(
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: activities.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Activity activity = activities[index];
+                        var widgetVM = _ListWidgetModel(
+                            title: activity.campaignName,
+                            subtitle: activity.nextAction,
+                            rowTitle: activity.status,
+                            rowSubtitle: activity.lastUpdate.toLocal()
+                                .toString());
+                        return makeCard(widgetVM);
+                      }),
+                );
+              }
+            case SupportedListItems.equipments:
+              {
+                List<Equipment> equipments = state.listItem;
+                return new Container(
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: equipments.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Equipment equip = equipments[index];
+                        var widgetVM = _ListWidgetModel(title: equip.name,
+                            subtitle: equip.description,
+                            rowTitle: equip.serialNumber,
+                            rowSubtitle: equip.description);
+                        return makeCard(widgetVM);
+                      }),
+                );
+              }
+          }
         } else {
           return new Container(
             height: 0,
@@ -58,10 +107,10 @@ class ListCollectionState extends State<ListCollection> {
 //        });
   }
 
-  Widget makeCard(Result item) {
+  Widget makeCard(_ListWidgetModel item) {
     return Card(
       elevation: 1.0,
-      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+//      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
 //        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .4)),
         child: makeListTile(item),
@@ -69,7 +118,7 @@ class ListCollectionState extends State<ListCollection> {
     );
   }
 
-  Widget makeListTile(Result item) {
+  Widget makeListTile(_ListWidgetModel item) {
     return ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         leading: Container(
@@ -83,7 +132,7 @@ class ListCollectionState extends State<ListCollection> {
           item.title,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+//         subtitle: Text(item.subtitle, style: TextStyle(color: Colors.black)),
 
         subtitle: Row(
           children: <Widget>[
@@ -92,7 +141,7 @@ class ListCollectionState extends State<ListCollection> {
                 child: Container(
                   // tag: 'hero',
                   child: Text(
-                    "${item.vote_average}",
+                    "${item.rowTitle}",
                     style: TextStyle(color: Colors.black),
                   ),
                 )),
@@ -105,7 +154,7 @@ class ListCollectionState extends State<ListCollection> {
                         new BorderSide(width: 1.0, color: Colors.black12))),
                 child: Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text(item.release_date,
+                    child: Text(item.rowSubtitle,
                         style: TextStyle(color: Colors.black))),
               ),
             )
@@ -114,4 +163,14 @@ class ListCollectionState extends State<ListCollection> {
         trailing:
         Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0));
   }
+}
+
+class _ListWidgetModel {
+  String title;
+  String subtitle;
+  String rowTitle;
+  String rowSubtitle;
+
+  _ListWidgetModel(
+      {this.title, this.subtitle, this.rowTitle, this.rowSubtitle});
 }

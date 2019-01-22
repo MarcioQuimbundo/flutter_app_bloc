@@ -6,3 +6,9 @@ export 'list_collection_event.dart';
 export 'list_api_provider.dart';
 export 'item_model.dart';
 export 'list_state.dart';
+
+enum SupportedListItems {
+  movie,
+  activities,
+  equipments,
+}

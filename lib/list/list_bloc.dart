@@ -26,9 +26,7 @@ class ListBloc extends Bloc<ListCollectionEvent, ListState> {
         {
           print("refresh");
           yield ListState.loading();
-          ItemModel item = await listRepository.fetchList();
-          var act = listRepository.retrieveActivities();
-          item.results.shuffle();
+          var item = await listRepository.fetchList();
           yield ListState.success(item);
         }
     }

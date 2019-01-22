@@ -26,7 +26,8 @@ class ListPage extends StatelessWidget {
         onRefresh: () async {
           listBloc.dispatch(ListCollectionEvent.refresh);
         },
-        child: ListCollection(listBloc: listBloc),
+        child: ListCollection(
+            listBloc: listBloc, listType: listBloc.listRepository.listType),
       ),
     );
   }

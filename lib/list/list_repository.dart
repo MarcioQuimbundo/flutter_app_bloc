@@ -1,16 +1,16 @@
-import 'movielist_api_provider.dart';
-import 'item_model.dart';
-import 'activitylist_api_provider.dart';
+import 'package:meta/meta.dart';
+import 'list_api_provider.dart';
+import 'list.dart';
 
-class ListRepository {
-  final movielistApiProvider =
-      MovieListApiProvider("http://api.themoviedb.org");
+class ListRepository<T> implements ListRepositoryAbstract {
+  final ListApiProvider listApiProvider;
+  final SupportedListItems listType;
 
-  final activitylistApiProvider = ActivityListApiProvider(
-      "https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io");
+  ListRepository({@required this.listApiProvider, @required this.listType});
 
-  Future<ItemModel> fetchList() => movielistApiProvider.retrieveList();
+  Future<T> fetchList() => listApiProvider.retrieveList();
+}
 
-  Future<List<Activity>> retrieveActivities() =>
-      activitylistApiProvider.retrieveList();
+abstract class ListRepositoryAbstract<T> {
+  Future<T> fetchList();
 }
