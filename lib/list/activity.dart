@@ -21,7 +21,7 @@ class Activity {
   int owner;
   String lastAction;
   String nextAction;
-  String lastUpdate;
+  DateTime lastUpdate;
   String campaignName;
   String status;
 
@@ -40,7 +40,7 @@ class Activity {
         owner: json["Owner"],
         lastAction: json["LastAction"],
         nextAction: json["NextAction"],
-        lastUpdate: json["LastUpdate"],
+    lastUpdate: DateTime.parse(json["LastUpdate"] as String),
         campaignName: json["CampaignName"],
         status: json["Status"],
       );
