@@ -5,9 +5,13 @@ class FormPage extends StatelessWidget {
     return Container(
       alignment: AlignmentDirectional.center,
       color: color,
-      child: Text(
-        '$index',
-        style: TextStyle(fontSize: 132.0, color: Colors.white),
+      child: Column(
+        children: <Widget>[
+          Text(
+            '$index',
+            style: TextStyle(fontSize: 132.0, color: Colors.white),
+          ),
+        ],
       ),
     );
   }

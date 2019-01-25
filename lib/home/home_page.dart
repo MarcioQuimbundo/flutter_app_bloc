@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
       makeDashboardItem("Appointments", Icons.calendar_today, '/activity'),
       makeDashboardItem("New Case", Icons.assignment, '/note'),
       makeDashboardItem("Movies", Icons.movie, '/movie'),
-      makeDashboardItem("Settings", Icons.settings, '/'),
+//      makeDashboardItem("Settings", Icons.settings, '/'),
     ];
 
     return Scaffold(
