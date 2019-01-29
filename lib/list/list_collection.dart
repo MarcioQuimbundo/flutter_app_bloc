@@ -85,8 +85,9 @@ class ListCollectionState extends State<ListCollection> {
                         var widgetVM = _ListWidgetModel(
                             title: equip.name,
                             subtitle: equip.location.toString(),
-                            rowTitle: equip.item_code,
-                            rowSubtitle: equip.warranties?.first?.type ?? "");
+                            rowTitle: equip.itemCode,
+                            rowSubtitle: equip.warranties?.first?.type ?? "",
+                            iconImage: equip.attachments.first);
                         return makeCard(widgetVM);
                       }),
                 );
@@ -131,7 +132,10 @@ class ListCollectionState extends State<ListCollection> {
         decoration: new BoxDecoration(
             border: new Border(
                 right: new BorderSide(width: 1.0, color: Colors.grey))),
-        child: Icon(Icons.autorenew, color: Colors.black12),
+        child: item.iconImage != null
+            ? Image.network(
+          item.iconImage, fit: BoxFit.contain, width: 50.0, height: 50.0,)
+            : Icon(Icons.autorenew, color: Colors.black12),
       ),
       title: Text(
         item.title,
@@ -140,7 +144,7 @@ class ListCollectionState extends State<ListCollection> {
       subtitle: Row(
         children: <Widget>[
           Expanded(
-              flex: 4,
+              flex: 1,
               child: Container(
                 // tag: 'hero',
                 child: Text(
@@ -149,7 +153,7 @@ class ListCollectionState extends State<ListCollection> {
                 ),
               )),
           Expanded(
-            flex: 4,
+            flex: 1,
             child: Container(
               decoration: new BoxDecoration(
                   border: new Border(
@@ -182,7 +186,11 @@ class _ListWidgetModel {
   String subtitle;
   String rowTitle;
   String rowSubtitle;
+  String iconImage;
 
-  _ListWidgetModel(
-      {this.title, this.subtitle, this.rowTitle, this.rowSubtitle});
+  _ListWidgetModel({this.title,
+    this.subtitle,
+    this.rowTitle,
+    this.rowSubtitle,
+    this.iconImage});
 }

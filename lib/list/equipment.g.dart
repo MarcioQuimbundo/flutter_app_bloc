@@ -21,7 +21,7 @@ Equipment _$EquipmentFromJson(Map<String, dynamic> json) {
   return Equipment(
       id: json['id'] as int,
       name: json['name'] as String,
-      item_code: json['item_code'] as String,
+      itemCode: json['itemCode'] as String,
       installationDate: json['installationDate'] == null
           ? null
           : DateTime.parse(json['installationDate'] as String),
@@ -32,19 +32,18 @@ Equipment _$EquipmentFromJson(Map<String, dynamic> json) {
           ?.map((e) =>
       e == null ? null : Warranty.fromJson(e as Map<String, dynamic>))
           ?.toList(),
-      attachments: (json['attachments'] as List)
-          ?.map((e) => e == null ? null : Uri.parse(e as String))
-          ?.toList());
+      attachments:
+      (json['attachments'] as List)?.map((e) => e as String)?.toList());
 }
 
 Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
-  'item_code': instance.item_code,
+  'itemCode': instance.itemCode,
   'installationDate': instance.installationDate?.toIso8601String(),
   'location': instance.location,
   'warranties': instance.warranties,
-  'attachments': instance.attachments?.map((e) => e?.toString())?.toList()
+  'attachments': instance.attachments
 };
 
 Location _$LocationFromJson(Map<String, dynamic> json) {

@@ -20,16 +20,16 @@ class Equipments {
 class Equipment {
   int id;
   String name;
-  String item_code;
+  String itemCode;
   DateTime installationDate;
   Location location;
   List<Warranty> warranties;
-  List<Uri> attachments;
+  List<String> attachments;
 
   Equipment({
     this.id,
     this.name,
-    this.item_code,
+    this.itemCode,
     this.installationDate,
     this.location,
     this.warranties,
@@ -62,9 +62,7 @@ class Location {
   @override
   String toString() {
     // TODO: implement toString
-    var str = super.toString();
-    return "Level: ${level} | ${unit} | ${placement}";
-//    return super.toString();
+    return super.toString();
   }
 }
 
