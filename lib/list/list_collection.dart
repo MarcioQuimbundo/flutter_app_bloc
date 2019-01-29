@@ -84,9 +84,9 @@ class ListCollectionState extends State<ListCollection> {
                         Equipment equip = equipments[index];
                         var widgetVM = _ListWidgetModel(
                             title: equip.name,
-                            subtitle: equip.description,
-                            rowTitle: equip.serialNumber,
-                            rowSubtitle: equip.description);
+                            subtitle: equip.location.toString(),
+                            rowTitle: equip.item_code,
+                            rowSubtitle: equip.warranties?.first?.type ?? "");
                         return makeCard(widgetVM);
                       }),
                 );

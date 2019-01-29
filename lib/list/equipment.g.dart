@@ -10,7 +10,7 @@ Equipments _$EquipmentsFromJson(Map<String, dynamic> json) {
   return Equipments(
       data: (json['data'] as List)
           ?.map((e) =>
-              e == null ? null : _$EquipmentFromJson(e as Map<String, dynamic>))
+      e == null ? null : Equipment.fromJson(e as Map<String, dynamic>))
           ?.toList());
 }
 
@@ -19,19 +19,64 @@ Map<String, dynamic> _$EquipmentsToJson(Equipments instance) =>
 
 Equipment _$EquipmentFromJson(Map<String, dynamic> json) {
   return Equipment(
-      id: json['Id'] as int,
-      name: json['Name'] as String,
-      serialNumber: json['SerialNumber'] as String,
-      quantity: json['Quantity'] as int,
-      locations: json['Locations'] as int,
-      description: json['Description'] as String);
+      id: json['id'] as int,
+      name: json['name'] as String,
+      item_code: json['item_code'] as String,
+      installationDate: json['installationDate'] == null
+          ? null
+          : DateTime.parse(json['installationDate'] as String),
+      location: json['location'] == null
+          ? null
+          : Location.fromJson(json['location'] as Map<String, dynamic>),
+      warranties: (json['warranties'] as List)
+          ?.map((e) =>
+      e == null ? null : Warranty.fromJson(e as Map<String, dynamic>))
+          ?.toList(),
+      attachments: (json['attachments'] as List)
+          ?.map((e) => e == null ? null : Uri.parse(e as String))
+          ?.toList());
 }
 
 Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
-      'Id': instance.id,
-      'Name': instance.name,
-      'SerialNumber': instance.serialNumber,
-      'Quantity': instance.quantity,
-      'Locations': instance.locations,
-      'Description': instance.description
+  'id': instance.id,
+  'name': instance.name,
+  'item_code': instance.item_code,
+  'installationDate': instance.installationDate?.toIso8601String(),
+  'location': instance.location,
+  'warranties': instance.warranties,
+  'attachments': instance.attachments?.map((e) => e?.toString())?.toList()
+};
+
+Location _$LocationFromJson(Map<String, dynamic> json) {
+  return Location(
+      level: json['level'] as String,
+      unit: json['unit'] as String,
+      placement: json['placement'] as String);
+}
+
+Map<String, dynamic> _$LocationToJson(Location instance) =>
+    <String, dynamic>{
+      'level': instance.level,
+      'unit': instance.unit,
+      'placement': instance.placement
+    };
+
+Warranty _$WarrantyFromJson(Map<String, dynamic> json) {
+  return Warranty(
+      type: json['type'] as String,
+      description: json['description'] as String,
+      startDate: json['startDate'] == null
+          ? null
+          : DateTime.parse(json['startDate'] as String),
+      endDate: json['endDate'] == null
+          ? null
+          : DateTime.parse(json['endDate'] as String));
+}
+
+Map<String, dynamic> _$WarrantyToJson(Warranty instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'description': instance.description,
+      'startDate': instance.startDate?.toIso8601String(),
+      'endDate': instance.endDate?.toIso8601String()
     };

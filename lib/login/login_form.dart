@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'login_animation.dart';
 import 'components/progress_button.dart';
 import 'package:flutter_app_bloc/authentication/authentication.dart';
@@ -22,7 +21,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
-
   AnimationController _loginButtonController;
   Animation<double> _buttonAnimation;
 
@@ -31,8 +29,8 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
     super.initState();
     _loginButtonController = new AnimationController(
         vsync: this, duration: new Duration(milliseconds: 3000));
-    _buttonAnimation =
-    new CurvedAnimation(parent: _loginButtonController, curve: Curves.easeIn);
+    _buttonAnimation = new CurvedAnimation(
+        parent: _loginButtonController, curve: Curves.easeIn);
 
     _buttonAnimation.addListener(() => this.setState(() {}));
     _loginButtonController.forward();

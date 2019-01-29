@@ -20,17 +20,70 @@ class Equipments {
 class Equipment {
   int id;
   String name;
-  String serialNumber;
-  int quantity;
-  int locations;
-  String description;
+  String item_code;
+  DateTime installationDate;
+  Location location;
+  List<Warranty> warranties;
+  List<Uri> attachments;
 
   Equipment({
     this.id,
     this.name,
-    this.serialNumber,
-    this.quantity,
-    this.locations,
-    this.description,
+    this.item_code,
+    this.installationDate,
+    this.location,
+    this.warranties,
+    this.attachments,
   });
+
+  factory Equipment.fromJson(Map<String, dynamic> json) =>
+      _$EquipmentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EquipmentToJson(this);
+}
+
+@JsonSerializable()
+class Location {
+  String level;
+  String unit;
+  String placement;
+
+  Location({
+    this.level,
+    this.unit,
+    this.placement,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LocationToJson(this);
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    var str = super.toString();
+    return "Level: ${level} | ${unit} | ${placement}";
+//    return super.toString();
+  }
+}
+
+@JsonSerializable()
+class Warranty {
+  String type;
+  String description;
+  DateTime startDate;
+  DateTime endDate;
+
+  Warranty({
+    this.type,
+    this.description,
+    this.startDate,
+    this.endDate,
+  });
+
+  factory Warranty.fromJson(Map<String, dynamic> json) =>
+      _$WarrantyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WarrantyToJson(this);
 }
