@@ -4,9 +4,9 @@ import 'package:meta/meta.dart';
 import 'list.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ListBloc extends Bloc<ListCollectionEvent, ListState> {
+class ListBloc<T> extends Bloc<ListCollectionEvent, ListState> {
   final ListRepository listRepository;
-  final itemController = PublishSubject<ItemModel>();
+  final itemController = PublishSubject<T>();
 
   ListBloc({@required this.listRepository}) : assert(listRepository != null);
 
@@ -26,7 +26,8 @@ class ListBloc extends Bloc<ListCollectionEvent, ListState> {
         {
           print("refresh");
           yield ListState.loading();
-          var item = await listRepository.fetchList();
+          T item = await listRepository.fetchList();
+          itemController.add(item);
           yield ListState.success(item);
         }
     }

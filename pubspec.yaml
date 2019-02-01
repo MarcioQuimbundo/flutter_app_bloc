@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^0.4.11
+  equatable: ^0.1.6
   http: ^0.12.0
   sqflite: ^0.13.0+1
   # The following adds the Cupertino Icons font to your application.
@@ -27,6 +28,7 @@ dependencies:
   qr_flutter: ^1.1.1
   carousel_slider: ^1.0.1
   flutter_full_pdf_viewer: ^1.0.1
+  intl: ^0.15.7
 
 dev_dependencies:
   flutter_test:

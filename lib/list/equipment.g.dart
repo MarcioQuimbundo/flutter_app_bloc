@@ -33,7 +33,13 @@ Equipment _$EquipmentFromJson(Map<String, dynamic> json) {
       e == null ? null : Warranty.fromJson(e as Map<String, dynamic>))
           ?.toList(),
       attachments:
-      (json['attachments'] as List)?.map((e) => e as String)?.toList());
+      (json['attachments'] as List)?.map((e) => e as String)?.toList(),
+      serviceHistory: (json['serviceHistory'] as List)
+          ?.map((e) =>
+      e == null
+          ? null
+          : ServiceHistory.fromJson(e as Map<String, dynamic>))
+          ?.toList());
 }
 
 Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
@@ -43,7 +49,8 @@ Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
   'installationDate': instance.installationDate?.toIso8601String(),
   'location': instance.location,
   'warranties': instance.warranties,
-  'attachments': instance.attachments
+  'attachments': instance.attachments,
+  'serviceHistory': instance.serviceHistory
 };
 
 Location _$LocationFromJson(Map<String, dynamic> json) {

@@ -1,4 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'service_history.dart';
+
+//import '../common/base_model.dart';
+import 'package:intl/intl.dart';
 
 part 'equipment.g.dart';
 
@@ -25,6 +29,7 @@ class Equipment {
   Location location;
   List<Warranty> warranties;
   List<String> attachments;
+  List<ServiceHistory> serviceHistory;
 
   Equipment({
     this.id,
@@ -34,12 +39,18 @@ class Equipment {
     this.location,
     this.warranties,
     this.attachments,
+    this.serviceHistory,
   });
 
   factory Equipment.fromJson(Map<String, dynamic> json) =>
       _$EquipmentFromJson(json);
 
   Map<String, dynamic> toJson() => _$EquipmentToJson(this);
+
+  String formatInstallationDate() =>
+      DateFormat('EEE, M/d/y').format(installationDate);
+
+
 }
 
 @JsonSerializable()
@@ -64,6 +75,12 @@ class Location {
     // TODO: implement toString
     return super.toString();
   }
+
+  String locationPrettyString() {
+    List<String> strArr = ["Level: " + level, unit, placement];
+    return strArr.join(', ');
+  }
+
 }
 
 @JsonSerializable()

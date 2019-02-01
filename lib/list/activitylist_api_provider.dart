@@ -9,7 +9,7 @@ class ActivityListApiProvider extends ListApiProvider {
 
   Future<List<Activity>> retrieveList() async {
     final response =
-        await client.get("$baseEndpoint/xrmdev/api/activities/get");
+    await client.get("$baseEndpoint/xrmdev/api/activities/get");
     if (response.statusCode == 200) {
       return Activities.fromJson(json.decode(response.body)).data;
     } else {
