@@ -26,6 +26,11 @@ Description of what the lane does
 fastlane ios beta
 ```
 Push a new beta build to TestFlight
+### ios add_device
+```
+fastlane ios add_device
+```
+Add device to provisioning profiles
 
 ----
 
