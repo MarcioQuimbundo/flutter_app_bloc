@@ -11,6 +11,8 @@ class ServiceHistory {
   String responsible;
   String status;
   String remarks;
+  DateTime dueDate;
+  DateTime dueTime;
   DateTime serviceDate;
   DateTime serviceTime;
 
@@ -22,6 +24,8 @@ class ServiceHistory {
     this.responsible,
     this.status,
     this.remarks,
+    this.dueDate,
+    this.dueTime,
     this.serviceDate,
     this.serviceTime,
   });
