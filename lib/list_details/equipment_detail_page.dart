@@ -30,24 +30,23 @@ class EquipmentDetailsPage extends StatelessWidget {
     return BlocProvider(
         bloc: equipmentDetailBloc ??
             EquipmentDetailBloc(equipmentRepository: equipmentRepository),
-        child: Container(
-            child: DefaultTabController(
-                length: 3,
-                child: Scaffold(
-                    appBar: AppBar(
-                      title: Text(title),
-                      bottom: TabBar(tabs: [
-                        Tab(text: "Details"),
-                        Tab(text: "Tasks"),
-                        Tab(text: "Files"),
-                      ]),
-                    ),
-                    body: TabBarView(
-                      children: [
-                        EquipmentDetailsWidget(),
-                        PDFLoadingScreen(),
-                        CarouselImage()
-                      ],
-                    )))));
+        child: DefaultTabController(
+            length: 3,
+            child: Scaffold(
+                appBar: AppBar(
+                  title: Text(title),
+                  bottom: TabBar(tabs: [
+                    Tab(text: "Details"),
+                    Tab(text: "Tasks"),
+                    Tab(text: "Files"),
+                  ]),
+                ),
+                body: TabBarView(
+                  children: [
+                    EquipmentDetailsWidget(),
+                    PDFLoadingScreen(),
+                    CarouselImage()
+                  ],
+                ))));
   }
 }

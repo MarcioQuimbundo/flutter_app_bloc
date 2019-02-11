@@ -1,8 +1,7 @@
 import 'dart:async';
 
 mixin Validators {
-  var emailValidator =
-      StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
+  final emailValidator = StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
     if (isEmailAddressValid(email)) {
       sink.add(email);
     } else {
@@ -10,8 +9,8 @@ mixin Validators {
     }
   });
 
-  var passwordValidator = StreamTransformer<String, String>.fromHandlers(
-      handleData: (password, sink) {
+  final passwordValidator =
+      StreamTransformer<String, String>.fromHandlers(handleData: (password, sink) {
     if (password.length > 4) {
       sink.add(password);
     } else {
