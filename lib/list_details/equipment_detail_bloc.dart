@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_app_bloc/list/equipment.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'equipment_repository.dart';
