@@ -27,10 +27,9 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _loginButtonController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 3000));
-    _buttonAnimation = new CurvedAnimation(
-        parent: _loginButtonController, curve: Curves.easeIn);
+    _loginButtonController =
+        new AnimationController(vsync: this, duration: Duration(milliseconds: 3000));
+    _buttonAnimation = new CurvedAnimation(parent: _loginButtonController, curve: Curves.easeIn);
 
     _buttonAnimation.addListener(() => this.setState(() {}));
     _loginButtonController.forward();
@@ -53,8 +52,10 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginEvent, LoginState>(
       bloc: widget.loginBloc,
-      builder: (BuildContext context,
-          LoginState loginState,) {
+      builder: (
+        BuildContext context,
+        LoginState loginState,
+      ) {
         if (loginState.loginSucceeded()) {
           widget.authBloc.dispatch(Login(token: loginState.token));
           widget.loginBloc.dispatch(LoggedIn());
@@ -76,46 +77,52 @@ class LoginFormState extends State<LoginForm> with TickerProviderStateMixin {
   }
 
   Widget _form(LoginState loginState) {
-    return Form(
-      child: Container(
-        padding: EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            StreamBuilder<String>(
-              stream: widget.loginBloc.email,
-              builder: (context, snapshot) =>
-                  TextField(
-                    onChanged: widget.loginBloc.emailChanged,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter email",
-                        labelText: "Email",
-                        errorText: snapshot.error),
-                  ),
+    return SafeArea(
+      child: Form(
+        child: Container(
+          padding: EdgeInsets.all(15.0),
+          child: Center(
+            child: Column(
+              children: [
+                StreamBuilder<String>(
+                  stream: widget.loginBloc.email,
+                  builder: (context, snapshot) => TextField(
+                        onChanged: widget.loginBloc.emailChanged,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Enter email",
+                            labelText: "Email",
+                            errorText: snapshot.error),
+                      ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                StreamBuilder<String>(
+                  stream: widget.loginBloc.password,
+                  builder: (context, snapshot) => TextField(
+                        onChanged: widget.loginBloc.passwordChanged,
+                        keyboardType: TextInputType.text,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Enter password",
+                            labelText: "Password",
+                            errorText: snapshot.error),
+                      ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                StreamBuilder(
+                  stream: widget.loginBloc.submitValid,
+                  builder: (context, snapshot) => ProgressButton(
+                      50.0, loginState, snapshot.hasData ? _onLoginButtonPressed : null),
+                )
+              ],
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            StreamBuilder<String>(
-              stream: widget.loginBloc.password,
-              builder: (context, snapshot) =>
-                  TextField(
-                    onChanged: widget.loginBloc.passwordChanged,
-                    keyboardType: TextInputType.text,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter password",
-                        labelText: "Password",
-                        errorText: snapshot.error),
-                  ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            ProgressButton(50.0, loginState, _onLoginButtonPressed),
-          ],
+          ),
         ),
       ),
     );

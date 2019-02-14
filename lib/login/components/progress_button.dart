@@ -13,8 +13,7 @@ class ProgressButton extends StatefulWidget {
   State<StatefulWidget> createState() => _ProgressButtonState();
 }
 
-class _ProgressButtonState extends State<ProgressButton>
-    with TickerProviderStateMixin {
+class _ProgressButtonState extends State<ProgressButton> with TickerProviderStateMixin {
   bool _isPressed = false, _animatingReveal = false;
   double _width = double.infinity;
   Animation _animation;
@@ -36,9 +35,10 @@ class _ProgressButtonState extends State<ProgressButton>
   @override
   Widget build(BuildContext context) {
     return PhysicalModel(
-        color: widget.loginState.token.isNotEmpty ? Colors.green : Colors.blue,
+        color: widget.callback != null ? Colors.transparent : Colors.grey,
         elevation: calculateElevation(),
         borderRadius: BorderRadius.circular(widget.size / 2.0),
+        clipBehavior: Clip.antiAlias,
         shadowColor: Colors.transparent,
         child: Container(
           key: _globalKey,
@@ -53,7 +53,7 @@ class _ProgressButtonState extends State<ProgressButton>
           ),
           child: FlatButton(
             padding: EdgeInsets.all(0.0),
-            color: Colors.transparent,
+            color: widget.loginState.token.isNotEmpty ? Colors.green : Colors.blue,
             child: buildButtonChild(),
             onPressed: widget.callback,
             onHighlightChanged: (isPressed) {
@@ -70,8 +70,7 @@ class _ProgressButtonState extends State<ProgressButton>
 
   Widget buildButtonChild() {
     if (widget.loginState.loginInitial()) {
-      return Text('Login',
-          style: TextStyle(color: Colors.white, fontSize: 16.0));
+      return Text('Login', style: TextStyle(color: Colors.white, fontSize: 16.0));
     } else if (widget.loginState.isLoading) {
       return SizedBox(
         height: 0.75 * widget.size,
@@ -92,13 +91,11 @@ class _ProgressButtonState extends State<ProgressButton>
   void animateButton() {
     double initialWidth = _globalKey.currentContext.size.width;
 
-    _controller =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    _controller = AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {
-          _width =
-              initialWidth - ((initialWidth - widget.size) * _animation.value);
+          _width = initialWidth - ((initialWidth - widget.size) * _animation.value);
         });
       });
     _controller.forward();

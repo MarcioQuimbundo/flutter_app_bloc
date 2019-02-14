@@ -21,6 +21,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
   Stream<String> get password =>
       _passwordController.stream.transform(passwordValidator);
 
+  Stream<bool> get submitValid => Observable.combineLatest2(email, password, (e,p) => true);
+
   LoginBloc({@required this.userRepository}) : assert(userRepository != null);
 
   @override
