@@ -29,12 +29,20 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: LoginForm(
-        authBloc: BlocProvider.of<AuthenticationBloc>(context),
-        loginBloc: _loginBloc,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: ListView(
+          children: <Widget>[
+            Image.asset(
+              'images/dvi-banner image.jpg',
+              //              fit: BoxFit.contain,
+            ),
+            LoginForm(
+              authBloc: BlocProvider.of<AuthenticationBloc>(context),
+              loginBloc: _loginBloc,
+            ),
+          ],
+        ),
       ),
     );
   }
