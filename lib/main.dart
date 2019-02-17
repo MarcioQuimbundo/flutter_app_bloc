@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter_app_bloc/api_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'user_repository/user_repository.dart';
 import 'authentication/authentication.dart';
 import 'login/login.dart';
@@ -20,14 +22,18 @@ class SimpleBlocDelegate extends BlocDelegate {
   }
 }
 
-void main() {
+//AuthService appAuth = AuthService();
+
+void main() async {
   BlocSupervisor().delegate = SimpleBlocDelegate();
+
   runApp(App());
 }
 
 class App extends StatefulWidget {
-  final UserRepository userRepository = UserRepository();
-  Widget defaultHome;
+  final UserRepository userRepository = UserRepository(
+      apiProvider: DVIApiProvider("https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io"));
+  Widget _defaultHome;
 
   @override
   State<App> createState() => AppState();
@@ -35,16 +41,20 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   AuthenticationBloc _authenticationBloc;
-
-//  final ListRepository _listRepository = ListRepository(
-//      listApiProvider: MovieListApiProvider("http://api.themoviedb.org"));
+  Map<String, WidgetBuilder> _routes;
 
   @override
   void initState() {
-    _authenticationBloc = AuthenticationBloc(userRepository: widget.userRepository);
-    _authenticationBloc.dispatch(AppStart());
-    widget.defaultHome = LoginPage(userRepository: widget.userRepository);
+//    if (_ready && _result) {
+//      widget._defaultHome = widget._home;
+//    } else {
+//      widget._defaultHome = LoginPage(userRepository: widget.userRepository);
+//    }
 
+    _authenticationBloc = AuthenticationBloc(userRepository: widget.userRepository);
+    _routes = Routes.loggedOutRoutes;
+    _authenticationBloc.dispatch(AppStart());
+    widget._defaultHome = LoginPage(userRepository: widget.userRepository);
     super.initState();
   }
 
@@ -61,40 +71,15 @@ class AppState extends State<App> {
         child: MaterialApp(
             title: "DVI App",
             debugShowCheckedModeBanner: false,
-//            home: LoginPage(userRepository: widget.userRepository),
-            routes: <String, WidgetBuilder>{
-              "/": (BuildContext context) {
-                return BlocBuilder<AuthenticationEvent, AuthenticationState>(
-                    bloc: _authenticationBloc,
-                    builder: (BuildContext context, AuthenticationState state) {
-                      if (state.isAuthenticated) {
-                        widget.defaultHome = HomePage();
-                      }
-                      return widget.defaultHome;
-                    });
-              },
-              "/movie": (BuildContext context) => new ListPage(
-                  title: "Movies",
-                  userRepository: widget.userRepository,
-                  listRepository: ListRepository(
-                      listApiProvider: MovieListApiProvider("http://api.themoviedb.org"),
-                      listType: SupportedListItems.movie)),
-              "/equipment": (BuildContext context) => new ListPage(
-                  title: "Equipments",
-                  userRepository: widget.userRepository,
-                  listRepository: ListRepository(
-                      listApiProvider: EquipmentListApiProvider(
-                          "https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io"),
-                      listType: SupportedListItems.equipments)),
-              "/scan": (BuildContext context) => new ScanScreen(),
-              "/note": (BuildContext context) => new FormPage(),
-              "/activity": (BuildContext context) => new ListPage(
-                  title: "Activities",
-                  userRepository: widget.userRepository,
-                  listRepository: ListRepository(
-                      listApiProvider: ActivityListApiProvider(
-                          "https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io"),
-                      listType: SupportedListItems.activities)),
-            }));
+            home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
+                bloc: _authenticationBloc,
+                builder: (BuildContext context, AuthenticationState state) {
+                  if (state.isAuthenticated) {
+                    widget._defaultHome = HomePage();
+                    _routes = Routes.loggedInRoutes;
+                  }
+                  return widget._defaultHome;
+                }),
+            routes: _routes));
   }
 }

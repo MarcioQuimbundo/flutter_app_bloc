@@ -35,7 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
       yield LoginState.loading();
 
       try {
-        final token = await userRepository.authenticate(
+        final token = await userRepository.login(
             username: _emailController.value,
             password: _passwordController.value);
         yield LoginState.success(token);

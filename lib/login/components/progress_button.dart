@@ -28,7 +28,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
 
   @override
   dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
