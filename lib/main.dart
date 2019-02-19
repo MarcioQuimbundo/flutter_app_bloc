@@ -1,6 +1,8 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_app_bloc/api_provider.dart';
+import 'package:flutter_app_bloc/application.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'user_repository/user_repository.dart';
@@ -32,7 +34,7 @@ void main() async {
 
 class App extends StatefulWidget {
   final UserRepository userRepository = UserRepository(
-      apiProvider: DVIApiProvider("https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io"));
+      apiProvider: DVIApiProvider(baseURL));
   Widget _defaultHome;
 
   @override

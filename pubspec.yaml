@@ -15,11 +15,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # bloc enforcement
   flutter_bloc: ^0.4.11
+  # access to shared preference
   shared_preferences: ^0.4.2
+  # better navigation routing
+  fluro: ^1.4.0
   uuid: 1.0.3
   equatable: ^0.1.6
+  # network
   http: ^0.12.0
+  #better network
+  dio: ^2.0.5
+  # simple persistent data
   sqflite: ^0.13.0+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -34,6 +42,7 @@ dependencies:
 #  image_picker: ^0.5.0+3
   image_form_field: ^0.0.2
   tuple: ^1.0.2
+  loadmore: ^1.0.3
 
 dev_dependencies:
   flutter_test:
