@@ -27,4 +27,12 @@ mixin Validators {
     return exp.hasMatch(email.trim());
     // we trim to remove trailing white spaces
   }
+
+  final requiredTextValidator = StreamTransformer<String, String>.fromHandlers(handleData: (text, sink) {
+     if (text.isNotEmpty) {
+      sink.add(text);
+    } else {
+      sink.addError("This field requires some input");
+    }
+  });
 }
