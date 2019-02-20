@@ -53,5 +53,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with Validators {
   void dispose() {
     _emailController?.close();
     _passwordController?.close();
+    super.dispose();
   }
 }
