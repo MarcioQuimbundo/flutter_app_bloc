@@ -2,13 +2,14 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_bloc/equipment/equipment.dart';
 import 'package:flutter_app_bloc/equipment/equipment_repository.dart';
+import 'package:flutter_app_bloc/form/form_event.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../api_provider.dart';
 import '../application.dart';
 import '../common/common.dart';
-import '../list/equipmentlist_api_provider.dart';
 import 'form_bloc.dart';
 import 'form_respository.dart';
 

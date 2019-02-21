@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_app_bloc/equipment/equipment.dart';
 import 'package:meta/meta.dart';
-import '../list/equipment.dart';
 
 abstract class EquipmentState extends Equatable {
   EquipmentState([List props = const []]) : super(props);

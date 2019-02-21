@@ -1,10 +1,10 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'service_history.dart';
-
-//import '../common/base_model.dart';
+import 'package:flutter_app_bloc/list/service_history.dart';
 import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'equipment.g.dart';
+//import '../common/base_model.dart';
+
 
 @JsonSerializable()
 class Equipments {

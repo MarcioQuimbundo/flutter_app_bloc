@@ -1,4 +1,4 @@
-import 'package:flutter_app_bloc/list/equipment.dart';
+import 'package:flutter_app_bloc/equipment/equipment.dart';
 import 'package:meta/meta.dart';
 import '../api_provider.dart';
 

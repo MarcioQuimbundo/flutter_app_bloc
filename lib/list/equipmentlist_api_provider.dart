@@ -1,6 +1,5 @@
+import 'package:flutter_app_bloc/equipment/equipment.dart';
 import 'list_api_provider.dart';
-import 'equipment.dart';
-export 'equipment.dart';
 import 'dart:async';
 import 'dart:convert';
 

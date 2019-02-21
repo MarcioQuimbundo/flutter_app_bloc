@@ -1,4 +1,4 @@
-import '../list/equipment.dart';
+import 'package:flutter_app_bloc/equipment/equipment.dart';
 import 'dart:async';
 import 'dart:convert';
 import '../common/base_api_provider.dart';

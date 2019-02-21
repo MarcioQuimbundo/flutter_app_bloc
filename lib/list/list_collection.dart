@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_bloc/application.dart';
+import 'package:flutter_app_bloc/equipment/equipment.dart';
 import 'package:flutter_app_bloc/equipment/equipment_detail_page.dart';
 import 'package:flutter_app_bloc/equipment/equipment_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'list.dart';
 import 'activity.dart';
-import 'equipment.dart';
 import '../list_details/list_details_page.dart';
 import '../api_provider.dart';
 
