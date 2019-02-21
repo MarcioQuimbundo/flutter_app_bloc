@@ -15,33 +15,33 @@ import 'package:fluro/fluro.dart';
 import 'route_handlers.dart';
 
 class Routes {
-  static final Map<String, WidgetBuilder> loggedInRoutes = <String, WidgetBuilder>{
-//              "/": (BuildContext context) => widget._defaultHome,
-    "/movie": (BuildContext context) => ListPage(
-        title: "Movies",
-        userRepository: UserRepository(apiProvider: DVIApiProvider(baseURL)),
-        listRepository: ListRepository(
-            listApiProvider: MovieListApiProvider("http://api.themoviedb.org"),
-            listType: SupportedListItems.movie)),
-    "/equipment": (BuildContext context) => ListPage(
-        title: "Equipments",
-        userRepository: UserRepository(apiProvider: DVIApiProvider(baseURL)),
-        listRepository: ListRepository(
-            listApiProvider: EquipmentListApiProvider(baseURL),
-            listType: SupportedListItems.equipments)),
-    "/scan": (BuildContext context) => new ScanScreen(),
-    "/note": (BuildContext context) => new FormPage(),
-    "/activity": (BuildContext context) => ListPage(
-        title: "Activities",
-        userRepository: UserRepository(apiProvider: DVIApiProvider(baseURL)),
-        listRepository: ListRepository(
-            listApiProvider: ActivityListApiProvider(baseURL),
-            listType: SupportedListItems.activities)),
-  };
+//   static final Map<String, WidgetBuilder> loggedInRoutes = <String, WidgetBuilder>{
+// //              "/": (BuildContext context) => widget._defaultHome,
+//     "/movie": (BuildContext context) => ListPage(
+//         title: "Movies",
+//         userRepository: UserRepository(apiProvider: DVIApiProvider(baseURL)),
+//         listRepository: ListRepository(
+//             listApiProvider: MovieListApiProvider("http://api.themoviedb.org"),
+//             listType: SupportedListItems.movie)),
+//     "/equipment": (BuildContext context) => ListPage(
+//         title: "Equipments",
+//         userRepository: UserRepository(apiProvider: DVIApiProvider(baseURL)),
+//         listRepository: ListRepository(
+//             listApiProvider: EquipmentListApiProvider(baseURL),
+//             listType: SupportedListItems.equipments)),
+//     "/scan": (BuildContext context) => new ScanScreen(),
+//     "/note": (BuildContext context) => new FormPage(),
+//     "/activity": (BuildContext context) => ListPage(
+//         title: "Activities",
+//         userRepository: UserRepository(apiProvider: DVIApiProvider(baseURL)),
+//         listRepository: ListRepository(
+//             listApiProvider: ActivityListApiProvider(baseURL),
+//             listType: SupportedListItems.activities)),
+//   };
 
-  static final loggedOutRoutes = <String, WidgetBuilder>{
-    "/login": (BuildContext context) => LoginPage()
-  };
+//   static final loggedOutRoutes = <String, WidgetBuilder>{
+//     "/login": (BuildContext context) => LoginPage()
+//   };
 
   static String root = "/";
   static String scanner = "/scan";

@@ -43,6 +43,7 @@ dependencies:
   image_form_field: ^0.0.2
   tuple: ^1.0.2
   loadmore: ^1.0.3
+  flutter_typeahead: ^1.0.4
 
 dev_dependencies:
   flutter_test:
