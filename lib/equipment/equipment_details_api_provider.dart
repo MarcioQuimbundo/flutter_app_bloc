@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import '../common/base_api_provider.dart';
 
+@deprecated
 class EquipmentListApiProvider extends BaseApiProvider<Equipment> {
   EquipmentListApiProvider(String baseEndpoint) : super(baseEndpoint);
 

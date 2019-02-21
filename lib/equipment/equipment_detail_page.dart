@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_bloc/equipment/equipment_details_widget.dart';
+import 'package:flutter_app_bloc/equipment/equipment_repository.dart';
+import 'package:flutter_app_bloc/list_details/widgets/files_widget.dart';
 import 'package:flutter_app_bloc/user_repository/user_repository.dart';
-import 'equipment_repository.dart';
 import 'equipment_detail_bloc.dart';
 import 'equipment_event.dart';
-import 'package:flutter_app_bloc/list_details/widgets/equipment_details_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'widgets/files_widget.dart';
 import '../pdf/pdf_page.dart';
 
 class EquipmentDetailsPage extends StatelessWidget {

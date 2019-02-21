@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_bloc/application.dart';
+import 'package:flutter_app_bloc/equipment/equipment_detail_page.dart';
+import 'package:flutter_app_bloc/equipment/equipment_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'list.dart';
 import 'activity.dart';
 import 'equipment.dart';
 import '../list_details/list_details_page.dart';
-import '../list_details/list_details_repository.dart';
-import '../list_details/list_details_api_provider.dart';
+import '../api_provider.dart';
+
 
 class ListCollection extends StatefulWidget {
   final ListBloc listBloc;
@@ -171,11 +174,14 @@ class ListCollectionState extends State<ListCollection> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                ListDetailsPage(
-                    title: "${item.title}",
-                    listRepository: ListDetailsRepository(
-                        listDetailsApiProvider: new ListDetailsApiProvider(
-                            "https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io")))));
+                EquipmentDetailsPage(title: item.title, id: "1", equipmentRepository: EquipmentRepository(
+                    apiProvider: DVIApiProvider(baseURL))
+                )));
+//                ListDetailsPage(
+//                    title: "${item.title}",
+//                    listRepository: EquipmentRepository(
+//                        apiProvider: EquipmentListApiProvider(api"https://9134d485-86e7-4fd7-afd5-28500eb1c97d.mock.pstmn.io")
+//                        ))));
       },
     );
   }

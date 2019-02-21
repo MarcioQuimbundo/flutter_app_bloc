@@ -1,15 +1,20 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_app_bloc/equipment/equipment_repository.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+
+import '../api_provider.dart';
+import '../application.dart';
 import '../common/common.dart';
-import '../login/validators.dart';
-import 'dart:math' as math;
+import '../list/equipmentlist_api_provider.dart';
+import 'form_bloc.dart';
+import 'form_respository.dart';
 
 class FormPage extends StatefulWidget {
   @override
-  FormPageState createState() {
-    return FormPageState();
-  }
+  FormPageState createState() => FormPageState();
 }
 
 class FormPageState extends State<FormPage> {
@@ -20,17 +25,22 @@ class FormPageState extends State<FormPage> {
     'Inspection',
     'Repair',
     'Replacement',
-    'Warranty Expired',
   ];
   String _type = '';
   List<ImageInputAdapter> _images = [];
-  PageController _controller = PageController(initialPage: 1);
+  PageController _controller = PageController(initialPage: 0);
   List<Widget> _pages = [];
 
   DateTime _fromDate = DateTime.now();
   TimeOfDay _fromTime = const TimeOfDay(hour: 7, minute: 28);
   DateTime _toDate = DateTime.now();
   TimeOfDay _toTime = TimeOfDay.now();
+
+  FormBloc _formBloc = FormBloc(
+      equipmentRepository:
+          EquipmentRepository(apiProvider: DVIApiProvider(baseURL)),
+      formRepository: FormRepository(apiProvider: DVIApiProvider(baseURL)));
+  TextEditingController _typeAheadController = TextEditingController();
 
   Widget _buildForm({int index}) {
     return Form(
@@ -46,18 +56,19 @@ class FormPageState extends State<FormPage> {
                     icon: const Icon(Icons.description),
                     labelText: 'Fault Type',
                   ),
-                  isEmpty: _type == '',
+                  // isEmpty: _type == '',
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
                       value: _type,
                       isDense: true,
-                      onChanged: (String newValue) {
-                        setState(() {
-//                                newContact.favoriteColor = newValue;
-                          _type = newValue;
-                          state.didChange(newValue);
-                        });
-                      },
+                      onChanged: _formBloc.faultTypeChanged,
+//                       onChanged: (String newValue) {
+//                         setState(() {
+// //                                newContact.favoriteColor = newValue;
+//                           _type = newValue;
+//                           state.didChange(newValue);
+//                         });
+//                       },
                       items: _types.map((String value) {
                         return DropdownMenuItem(
                           value: value,
@@ -69,33 +80,75 @@ class FormPageState extends State<FormPage> {
                 );
               },
             ),
-            TextFormField(
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter some text';
-                }
+            TypeAheadField(
+              textFieldConfiguration: TextFieldConfiguration(
+                  autofocus: true,
+                  onChanged: _formBloc.locationChanged,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.location_on),
+                    hintText: 'Enter location',
+                    labelText: 'Location',
+                  )),
+              suggestionsCallback: (pattern) async {
+                return await _formBloc.equipmentRepository
+                    .retrieveEquipmentList();
               },
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.location_on),
-                hintText: 'Enter location',
-                labelText: 'Location',
-              ),
-            ),
-            TextFormField(
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter some text';
-                }
+              itemBuilder: (context, Equipment suggestion) {
+                return ListTile(
+                  title: Text(suggestion.name),
+                );
               },
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.important_devices),
-                hintText: 'Enter equipment id',
-                labelText: 'Equipment ID',
-              ),
+              onSuggestionSelected: (Equipment suggestion) {
+                print(suggestion.name);
+                return _formBloc.locationChanged;
+              },
             ),
 
+            // StreamBuilder<String>(
+            //     stream: _formBloc.location,
+            //     builder: (context, snapshot) => TextField(
+            //           keyboardType: TextInputType.text,
+            //           onChanged: _formBloc.locationChanged,
+            //           // validator: (value) {
+            //           //   if (value.isEmpty) {
+            //           //     return 'Please enter some text';
+            //           //   }
+            //           // },
+            //           decoration: InputDecoration(
+            //               icon: Icon(Icons.location_on),
+            //               hintText: 'Enter location',
+            //               labelText: 'Location',
+            //               errorText: snapshot.error),
+            //         )),
+            TypeAheadFormField(
+              textFieldConfiguration: TextFieldConfiguration(
+                  controller: _typeAheadController,
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.important_devices),
+                    hintText: 'Enter equipment id',
+                    labelText: 'Equipment ID',
+                  )),
+              suggestionsCallback: (pattern) async {
+                return await _formBloc.equipmentRepository
+                    .retrieveEquipmentList();
+              },
+              itemBuilder: (context, suggestion) {
+                Equipment equip = suggestion;
+                return ListTile(title: Text(equip.name));
+              },
+              transitionBuilder: (context, suggestionsBox, controller) {
+                return suggestionsBox;
+              },
+              // validator: (value) {
+              //   if (value.isEmpty) {
+              //     return 'Please enter some text';
+              //   }
+              // },
+              onSuggestionSelected: (Equipment suggestion) {
+                this._typeAheadController.text = suggestion.name;
+              },
+            ),
             TextFormField(
               decoration: const InputDecoration(
                 icon: const Icon(Icons.insert_drive_file),
@@ -103,7 +156,6 @@ class FormPageState extends State<FormPage> {
                 labelText: 'Serial Number',
               ),
             ),
-
 //                  DateTimePicker(
 //                    labelText: 'From',
 //                    showIcon: true,
@@ -218,13 +270,16 @@ class FormPageState extends State<FormPage> {
                     padding: EdgeInsets.only(top: 20.0),
                     decoration: BoxDecoration(shape: BoxShape.rectangle),
                     child: Text(
-                      count == null || count < 1 ? "Upload Image" : "Upload More",
+                      count == null || count < 1
+                          ? "Upload Image"
+                          : "Upload More",
                       textAlign: TextAlign.center,
                     ),
                   ),
               initializeFileAsImage: (file) => ImageInputAdapter(file: file),
               onSaved: (val) => _images = val,
-              previewImageBuilder: (BuildContext context, image) => image.widgetize(),
+              previewImageBuilder: (BuildContext context, image) =>
+                  image.widgetize(),
             ),
             SizedBox(
               height: 20,
@@ -283,14 +338,14 @@ class FormPageState extends State<FormPage> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Add a new Equipment",
         child: Icon(Icons.add),
-//        key: ArchSampleKeys.editTodoFab,
         onPressed: () {
           Widget newPage = _buildPage(
               index: _pages.length + 1,
-              color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt() << 0).withOpacity(1.0));
+              color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt() << 0)
+                  .withOpacity(1.0));
           _pages.add(newPage);
           setState(() {
-            _controller.animateToPage(_pages.length-1,
+            _controller.animateToPage(_pages.length - 1,
                 duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
           });
         },

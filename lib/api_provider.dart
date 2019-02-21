@@ -1,8 +1,12 @@
+import 'package:async/async.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show Client;
 import 'list/equipment.dart';
 import 'list/activity.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:path/path.dart';
+import 'dart:io';
 
 abstract class BaseApiProvider<T> {
   Client client = Client();
@@ -47,5 +51,25 @@ class DVIApiProvider extends BaseApiProvider {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
     }
+  }
+
+  uploadImageFile(File imageFile) async {
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+
+    String uploadURL = "www.test.com";
+    var uri = Uri.parse(uploadURL);
+
+    var request = http.MultipartRequest("POST", uri);
+    var multipartFile = http.MultipartFile('file', stream, length,
+                                                   filename: basename(imageFile.path));
+    //contentType: new MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
   }
 }

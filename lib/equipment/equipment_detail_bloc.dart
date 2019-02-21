@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_app_bloc/equipment/equipment_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'equipment_repository.dart';
 import 'equipment_event.dart';
 
 class EquipmentDetailBloc<Equipment>

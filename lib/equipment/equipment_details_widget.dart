@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_bloc/list/equipment.dart';
-import 'package:flutter_app_bloc/list_details/equipment_event.dart';
-import '../equipment_detail_bloc.dart';
+import 'package:flutter_app_bloc/equipment/equipment_detail_bloc.dart';
+import 'package:flutter_app_bloc/equipment/equipment_event.dart';
+import 'package:flutter_app_bloc/list/service_history.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../list/service_history.dart';
+
+import '../list/equipment.dart';
 
 ///
 /// customize this to fit Equipment's layout
