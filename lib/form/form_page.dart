@@ -21,15 +21,13 @@ class FormPage extends StatefulWidget {
 class FormPageState extends State<FormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<String> _types = <String>[
-    '',
-    'Inspection',
-    'Repair',
-    'Replacement',
-  ];
-  String _type = '';
   List<ImageInputAdapter> _images = [];
   PageController _controller = PageController(initialPage: 0);
+  Map<Key, TextEditingController> _textEditingControllers = Map.fromIterable(
+    _fields,
+    key: (item) => Key(item.toString()),
+    value: (val) => TextEditingController(),
+  );
   List<Widget> _pages = [];
 
   DateTime _fromDate = DateTime.now();
@@ -37,18 +35,27 @@ class FormPageState extends State<FormPage> {
   DateTime _toDate = DateTime.now();
   TimeOfDay _toTime = TimeOfDay.now();
 
+  static List<String> _fields = [
+    "fault field",
+    "equipment field",
+    "location field",
+    "serial number field",
+    "description field",
+    "reported by field",
+  ];
+
   FormBloc _formBloc = FormBloc(
       equipmentRepository:
           EquipmentRepository(apiProvider: DVIApiProvider(baseURL)),
       formRepository: FormRepository(apiProvider: DVIApiProvider(baseURL)));
-  TextEditingController _typeAheadController = TextEditingController();
+  // TextEditingController _typeAheadController = TextEditingController();
 
   Widget _buildForm({int index}) {
     return Form(
         key: Key("$_formKey $index"),
         autovalidate: true,
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           children: <Widget>[
             FormField(
               builder: (FormFieldState state) {
@@ -57,20 +64,15 @@ class FormPageState extends State<FormPage> {
                     icon: const Icon(Icons.description),
                     labelText: 'Fault Type',
                   ),
-                  // isEmpty: _type == '',
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
-                      value: _type,
+                      value: state.value,
                       isDense: true,
-                      onChanged: _formBloc.faultTypeChanged,
-//                       onChanged: (String newValue) {
-//                         setState(() {
-// //                                newContact.favoriteColor = newValue;
-//                           _type = newValue;
-//                           state.didChange(newValue);
-//                         });
-//                       },
-                      items: _types.map((String value) {
+                      onChanged: (newValue) {
+                        _formBloc.faultTypeSelected.add(newValue);
+                        state.didChange(newValue);
+                      },
+                      items: _formBloc.dropdownValues.map((String value) {
                         return DropdownMenuItem(
                           value: value,
                           child: Text(value),
@@ -81,49 +83,39 @@ class FormPageState extends State<FormPage> {
                 );
               },
             ),
-            TypeAheadField(
-              textFieldConfiguration: TextFieldConfiguration(
-                  autofocus: true,
-                  onChanged: _formBloc.locationChanged,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.location_on),
-                    hintText: 'Enter location',
-                    labelText: 'Location',
-                  )),
-              suggestionsCallback: (pattern) async {
-                return await _formBloc.equipmentRepository
-                    .retrieveEquipmentList();
-              },
-              itemBuilder: (context, Equipment suggestion) {
-                return ListTile(
-                  title: Text(suggestion.name),
-                );
-              },
-              onSuggestionSelected: (Equipment suggestion) {
-                print(suggestion.name);
-                return _formBloc.locationChanged;
-              },
-            ),
-
-            // StreamBuilder<String>(
-            //     stream: _formBloc.location,
-            //     builder: (context, snapshot) => TextField(
-            //           keyboardType: TextInputType.text,
-            //           onChanged: _formBloc.locationChanged,
-            //           // validator: (value) {
-            //           //   if (value.isEmpty) {
-            //           //     return 'Please enter some text';
-            //           //   }
-            //           // },
-            //           decoration: InputDecoration(
-            //               icon: Icon(Icons.location_on),
-            //               hintText: 'Enter location',
-            //               labelText: 'Location',
-            //               errorText: snapshot.error),
-            //         )),
+            StreamBuilder(
+                stream: _formBloc.location,
+                builder: (context, snapshot) => TypeAheadField(
+                      key: Key("location field"),
+                      textFieldConfiguration: TextFieldConfiguration(
+                          controller:
+                              _textEditingControllers[Key("location field")],
+                          autofocus: true,
+                          // onChanged: _formBloc.locationChanged,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.location_on),
+                            hintText: 'Enter location',
+                            labelText: 'Location',
+                          )),
+                      suggestionsCallback: (pattern) async {
+                        return await _formBloc.equipmentRepository
+                            .retrieveEquipmentList();
+                      },
+                      itemBuilder: (context, Equipment suggestion) {
+                        return ListTile(
+                          title: Text(suggestion.name),
+                        );
+                      },
+                      onSuggestionSelected: (Equipment suggestion) {
+                        _textEditingControllers[Key("location field")].text =
+                            suggestion.name;
+                        _formBloc.locationSelected.add(suggestion.name);
+                      },
+                    )),
             TypeAheadFormField(
+              key: Key("equipment field"),
               textFieldConfiguration: TextFieldConfiguration(
-                  controller: _typeAheadController,
+                  controller: _textEditingControllers[Key("equipment field")],
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.important_devices),
@@ -147,32 +139,23 @@ class FormPageState extends State<FormPage> {
               //   }
               // },
               onSuggestionSelected: (Equipment suggestion) {
-                this._typeAheadController.text = suggestion.name;
+                _textEditingControllers[Key("equipment field")].text =
+                    suggestion.name;
+                _formBloc.equipmentIDSelected.add(suggestion.name);
               },
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.insert_drive_file),
-                hintText: 'Enter serial number',
-                labelText: 'Serial Number',
-              ),
-            ),
-//                  DateTimePicker(
-//                    labelText: 'From',
-//                    showIcon: true,
-//                    selectedDate: _fromDate,
-//                    selectedTime: _fromTime,
-//                    selectDate: (DateTime date) {
-//                      setState(() {
-//                        _fromDate = date;
-//                      });
-//                    },
-//                    selectTime: (TimeOfDay time) {
-//                      setState(() {
-//                        _fromTime = time;
-//                      });
-//                    },
-//                  ),
+            StreamBuilder<String>(
+                stream: _formBloc.serialNumber,
+                builder: (context, snapshot) => TextField(
+                      keyboardType: TextInputType.text,
+                      onChanged: (value) =>
+                          _formBloc.serialNumberChanged.add(value),
+                      decoration: InputDecoration(
+                          icon: Icon(Icons.insert_drive_file),
+                          hintText: 'Enter serial number',
+                          labelText: 'Serial Number',
+                          errorText: snapshot.error),
+                    )),
             DateTimePicker(
               labelText: 'Incident Date',
               showIcon: true,
@@ -237,14 +220,18 @@ class FormPageState extends State<FormPage> {
                 });
               },
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.description),
-                hintText: 'Describe the case',
-                labelText: 'Description',
-              ),
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
+            StreamBuilder<String>(
+              stream: _formBloc.description,
+              builder: (context, snapshot) => TextField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.description),
+                      hintText: 'Describe the case',
+                      labelText: 'Description',
+                    ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    onChanged: _formBloc.descriptionChanged,
+                  ),
             ),
 //                  TextFormField(
 //                    decoration: const InputDecoration(
@@ -292,16 +279,20 @@ class FormPageState extends State<FormPage> {
                 labelText: 'Reported by',
               ),
             ),
-//            Container(
-//                padding: const EdgeInsets.only(top: 20.0),
-//                child: Center(
-//                  child: RaisedButton(
-//                    elevation: 2,
-//                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-//                    child: const Text('Submit'),
-//                    onPressed: () => print("submit"),
-//                    ),
-//                  )),
+            Container(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Center(
+                  child: RaisedButton(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100)),
+                    child: const Text('Submit'),
+                    onPressed: () {
+                      print("submit");
+                      _formBloc.dispatch(SubmitForm());
+                    },
+                  ),
+                )),
           ],
         ));
   }
@@ -310,6 +301,12 @@ class FormPageState extends State<FormPage> {
   void initState() {
     super.initState();
     _pages = [_buildPage(index: 1, color: Colors.white)];
+  }
+
+  @override
+  void dispose() {
+    _formBloc.dispose();
+    super.dispose();
   }
 
   Widget _buildPage({int index, Color color}) {

@@ -26,7 +26,7 @@ dependencies:
   # network
   http: ^0.12.0
   #better network
-  dio: ^2.0.5
+  dio: ^2.0.10
   # simple persistent data
   sqflite: ^0.13.0+1
   # The following adds the Cupertino Icons font to your application.
@@ -44,6 +44,8 @@ dependencies:
   tuple: ^1.0.2
   loadmore: ^1.0.3
   flutter_typeahead: ^1.0.4
+  flutter_picker:
+    git: git://github.com/yangyxd/flutter_picker.git
 
 dev_dependencies:
   flutter_test:

@@ -15,15 +15,17 @@ class FormBloc extends Bloc<BaseEvent, BaseState> with Validators {
   final BehaviorSubject<String> _locationController = BehaviorSubject<String>();
   final BehaviorSubject<String> _serialNumberController =
       BehaviorSubject<String>();
+  final BehaviorSubject<DateTime> _incidentDateController = BehaviorSubject<DateTime>();
   final BehaviorSubject<String> _descriptionController =
       BehaviorSubject<String>();
   final BehaviorSubject<String> _reportedByController =
       BehaviorSubject<String>();
 
-  Function(String) get faultTypeChanged => _faultTypeController.sink.add;
-  Function(String) get equipmentIDChanged => _equipmentIDController.sink.add;
-  Function(String) get locationChanged => _locationController.sink.add;
-  Function(String) get serialNumberChanged => _serialNumberController.sink.add;
+  Sink<String> get faultTypeSelected => _faultTypeController.sink;
+  Sink<String> get equipmentIDSelected => _equipmentIDController.sink;
+  Sink<String> get locationSelected => _locationController.sink;
+  Sink<String> get serialNumberChanged => _serialNumberController.sink;
+  Sink<DateTime> get incidentDateChanged => _incidentDateController.sink;
   Function(String) get descriptionChanged => _descriptionController.sink.add;
   Function(String) get reportedByChanged => _reportedByController.sink.add;
 
@@ -31,8 +33,8 @@ class FormBloc extends Bloc<BaseEvent, BaseState> with Validators {
       _faultTypeController.stream.transform(requiredTextValidator);
   Stream<String> get equipmentID =>
       _equipmentIDController.stream.transform(requiredTextValidator);
-  Stream<String> get location =>
-      _locationController.stream.transform(requiredTextValidator);
+  Stream<String> get location => _locationController.stream;
+  // .transform(requiredTextValidator);
   Stream<String> get serialNumber =>
       _serialNumberController.stream.transform(requiredTextValidator);
   Stream<String> get description =>
@@ -40,10 +42,21 @@ class FormBloc extends Bloc<BaseEvent, BaseState> with Validators {
   Stream<String> get reportedBy =>
       _reportedByController.stream.transform(requiredTextValidator);
 
+  final _dropDown = BehaviorSubject<String>();
+  Stream<String> get dropDownStream => _dropDown.stream;
+  Sink<String> get dropDownSink => _dropDown.sink;
+  final dropdownValues = [
+    '',
+    'Inspection',
+    'Repair',
+    'Replacement',
+  ];
+
   final FormRepository formRepository;
   final EquipmentRepository equipmentRepository;
 
-  FormBloc({this.equipmentRepository, @required this.formRepository}) :assert(formRepository != null);
+  FormBloc({this.equipmentRepository, @required this.formRepository})
+      : assert(formRepository != null);
 
   @override
   BaseState get initialState => BaseState.initial();
@@ -51,6 +64,12 @@ class FormBloc extends Bloc<BaseEvent, BaseState> with Validators {
   @override
   Stream<BaseState> mapEventToState(BaseState currentState, event) async* {
     if (event is SubmitForm) {
+      print(_faultTypeController.value);
+      print(_locationController.value);
+      print(_equipmentIDController.value);
+      print(_serialNumberController.value);
+      print(_descriptionController.value);
+      print(_reportedByController.value);
       yield BaseState.loading();
     }
   }
@@ -61,9 +80,10 @@ class FormBloc extends Bloc<BaseEvent, BaseState> with Validators {
     _equipmentIDController?.close();
     _locationController?.close();
     _serialNumberController?.close();
+    _incidentDateController?.close();
     _descriptionController?.close();
     _reportedByController?.close();
+    _dropDown?.close();
     super.dispose();
   }
-
 }
