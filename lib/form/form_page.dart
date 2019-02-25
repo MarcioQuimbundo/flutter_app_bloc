@@ -90,7 +90,7 @@ class FormPageState extends State<FormPage> {
                       textFieldConfiguration: TextFieldConfiguration(
                           controller:
                               _textEditingControllers[Key("location field")],
-                          autofocus: true,
+                          // autofocus: true,
                           // onChanged: _formBloc.locationChanged,
                           decoration: InputDecoration(
                             icon: Icon(Icons.location_on),
@@ -272,6 +272,18 @@ class FormPageState extends State<FormPage> {
             SizedBox(
               height: 20,
             ),
+            StreamBuilder<String>(
+                stream: _formBloc.reportedBy,
+                builder: (context, snapshot) => TextField(
+                      keyboardType: TextInputType.text,
+                      onChanged: (value) =>
+                          _formBloc.reportedByChanged,
+                      decoration: InputDecoration(
+                          icon: Icon(Icons.person),
+                          hintText: 'Enter name',
+                          labelText: 'Reported by',
+                          errorText: snapshot.error),
+                    )),
             TextField(
               decoration: const InputDecoration(
                 icon: const Icon(Icons.person),
